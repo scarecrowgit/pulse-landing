@@ -1,0 +1,5 @@
+# Pulse
+
+> Pulse is an analytics platform for small and medium businesses: a dashboard builder on a SQL query engine, managed PostgreSQL, ClickHouse, Cassandra and MongoDB databases, website and app tracking, alerts, and an MCP server for AI assistants. Available as a cloud service or self-hosted.
+
+- [Home](https://pulse.app/): product overview, pricing and FAQ
