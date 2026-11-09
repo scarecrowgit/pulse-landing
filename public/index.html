@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0b">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>Pulse: dashboards, databases and analytics for small businesses</title>
+<link rel="stylesheet" href="/assets/bundle.css">
+<meta name="description" content="Pulse is an analytics platform for small and medium businesses: SQL dashboards, managed PostgreSQL and ClickHouse, and website tracking in one place. Cloud or self-hosted.">
+<link rel="canonical" href="https://pulse.app/">
+<meta property="og:title" content="Pulse: dashboards, databases and analytics in one place">
+<meta property="og:description" content="Connect your databases or start one with us, track your website, and build dashboards your whole team understands. Cloud or self-hosted.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pulse.app/">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Pulse","url":"https://pulse.app/"},{"@type":"SoftwareApplication","name":"Pulse","applicationCategory":"BusinessApplication","operatingSystem":"Web, Linux (self-hosted via Docker or Kubernetes)","description":"Analytics platform for small and medium businesses: a dashboard builder on a SQL query engine, managed PostgreSQL, ClickHouse, Cassandra and MongoDB databases, website and app tracking, alerts, and an MCP server for AI assistants. Available as a cloud service or self-hosted.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Free plan for small teams"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Pulse?","acceptedAnswer":{"@type":"Answer","text":"Pulse is an analytics platform for small and medium businesses. It combines a dashboard builder and SQL query engine, managed databases, and website tracking, so a team can go from raw data to a live dashboard without a data team or several vendors."}},{"@type":"Question","name":"Do I need to know SQL to use Pulse?","acceptedAnswer":{"@type":"Answer","text":"No. You can build charts by picking a table, a measure and a grouping, or describe what you want and Pulse writes the SQL. People who know SQL can write it directly."}},{"@type":"Question","name":"Does Pulse copy my data?","acceptedAnswer":{"@type":"Answer","text":"No. Pulse queries connected databases where they are, with a read-only user, and keeps results for a few minutes to make dashboards fast. Data is only stored by Pulse if you use a Pulse database or website tracking."}},{"@type":"Question","name":"Can I self-host Pulse?","acceptedAnswer":{"@type":"Answer","text":"Yes. The full analytics tool runs on your own servers with Docker or Kubernetes, including dashboards, the query engine, tracking, alerts and the MCP server. Nothing is sent back to Pulse."}},{"@type":"Question","name":"Which databases can Pulse host?","acceptedAnswer":{"@type":"Answer","text":"PostgreSQL, ClickHouse, Cassandra and MongoDB, as a small shared instance that is ready in seconds or a dedicated instance with reserved resources."}},{"@type":"Question","name":"Can ChatGPT or Claude read my Pulse data?","acceptedAnswer":{"@type":"Answer","text":"Yes, if you turn on the Pulse MCP server. Each person signs in with their own Pulse account, sees only what they can see in Pulse, and assistants run read-only queries by default."}},{"@type":"Question","name":"Where is my data stored?","acceptedAnswer":{"@type":"Answer","text":"Pulse Cloud runs in Frankfurt (EU) or Virginia (US); you choose when you create a workspace. Self-hosted Pulse keeps everything on your servers."}}]}]}</script>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0a0a0b; --surface: #111113; --surface-raised: #18181b; --surface-overlay: #1f1f23;
+  --border-subtle: #1f1f23; --border: #2a2a2f; --border-control: #6b6b74;
+  --text: #ededef; --text-secondary: #a1a1aa; --text-muted: #86868f;
+  --accent: #a78bfa; --accent-subtle: rgba(167, 139, 250, 0.12); --on-accent: #0a0a0b; --focus-ring: #a78bfa;
+  --primary: #7c3aed; --primary-hover: #6a2fd4; --on-primary: #ffffff;
+  --success: #3ddc97; --success-subtle: rgba(61, 220, 151, 0.12);
+  --danger: #f2555a; --danger-subtle: rgba(242, 85, 90, 0.12); --on-danger: #0a0a0b;
+  --warning: #f5a524; --warning-subtle: rgba(245, 165, 36, 0.12); --info: #5ea2ef; --info-subtle: rgba(94, 162, 239, 0.12);
+  --chart-1: #9085e9; --chart-2: #d95926; --chart-3: #199e70; --chart-4: #3987e5; --chart-5: #c98500; --chart-grid: #1f1f23; --chart-axis: #2a2a2f;
+  --seq-1: #2f2452; --seq-2: #4a3a7d; --seq-3: #6652a6; --seq-4: #876fd4; --seq-5: #a791fa; --seq-6: #c9b9ff;
+  --on-seq-1: #ededef; --on-seq-2: #ededef; --on-seq-3: #ededef; --on-seq-4: #0a0a0b; --on-seq-5: #0a0a0b; --on-seq-6: #0a0a0b;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-xl: 12px; --radius-full: 9999px;
+  --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --duration-press: 120ms; --duration-hover: 150ms; --ease-out: cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+body { margin: 0; background: #0a0a0b; }
+html { scroll-behavior: smooth; }
+section[id], article[id] { scroll-margin-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+a { color: #a78bfa; } a:hover { color: #c4b5fd; }
+</style>
+</head>
+<body>
+
+<div style="background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 16px; line-height: 24px;">
+
+  <header style="border-bottom: 1px solid var(--border);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="/" aria-label="Pulse home" style="display: flex; align-items: center; gap: 10px; height: 32px; color: var(--text); text-decoration: none; font: 600 16px/32px var(--font-sans);"><svg width="24" height="24" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" style="fill: var(--accent)"></rect><path d="M4 11h3l2-5 2 8 2-3h3" fill="none" style="stroke: var(--on-accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Pulse</a>
+      <nav aria-label="Main" style="display: flex; align-items: center; height: 32px; gap: 20px; flex-wrap: wrap; font: 500 14px/32px var(--font-sans);">
+        <a href="#product" style="color: var(--text-secondary); text-decoration: none;">Product</a>
+        <a href="#databases" style="color: var(--text-secondary); text-decoration: none;">Databases</a>
+        <a href="#tracking" style="color: var(--text-secondary); text-decoration: none;">Tracking</a>
+        <a href="#pricing" style="color: var(--text-secondary); text-decoration: none;">Pricing</a>
+        <a href="#self-host" style="color: var(--text-secondary); text-decoration: none;">Self-host</a>
+        <a href="/docs" style="color: var(--text-secondary); text-decoration: none;">Docs</a>
+      </nav>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <a class="pl-btn pl-btn--ghost" href="/login" style="text-decoration: none;">Sign in</a>
+        <a class="pl-btn pl-btn--primary" href="/signup" style="text-decoration: none;">Start free</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="hero-title" style="max-width: 1200px; margin: 0 auto; padding: 80px 24px 64px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px;">
+      <span class="pl-badge" style="color: var(--accent); background: var(--accent-subtle); border-color: transparent;">Analytics for small and medium businesses</span>
+      <h1 id="hero-title" style="margin: 0; max-width: 860px; font: 600 clamp(36px, 5vw, 56px)/1.08 var(--font-sans); letter-spacing: -0.035em; text-wrap: balance;">Dashboards, databases and website analytics in one place</h1>
+      <p style="margin: 0; max-width: 720px; font-size: 19px; line-height: 29px; color: var(--text-secondary);">Pulse is an analytics platform for teams without a data department. Connect the databases you already have or start one with us, track your website, and build dashboards everyone understands. One bill, in our cloud or on your own servers.</p>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 4px;">
+        <a class="pl-btn pl-btn--primary pl-btn--lg" href="/signup" style="text-decoration: none;">Start free</a>
+        <a class="pl-btn pl-btn--secondary pl-btn--lg" href="#self-host" style="text-decoration: none;">Self-host Pulse</a>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Free for small teams · no card needed · hosted in the EU or US</p>
+
+      <figure style="margin: 36px 0 0; width: 100%; max-width: 1080px;">
+        <div style="border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow-modal); overflow: hidden; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border);"><i style="width: 10px; height: 10px; border-radius: 50%; background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--border);"></i><i style="width: 10px; height: 10px; border-radius: 50%; background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--border);"></i><i style="width: 10px; height: 10px; border-radius: 50%; background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--border);"></i><span class="pl-mono" style="margin-left: 10px; font-size: 12px; color: var(--text-muted);">acme.pulse.app · Revenue overview</span></div>
+          <div style="display: flex; background: var(--bg); font-size: 13px; line-height: 18px;">
+            <div aria-hidden="true" style="flex: none; width: 52px; border-right: 1px solid var(--border); background: var(--surface); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 0;">
+              <span style="width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></span>
+              <span style="position: relative; width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--accent); background: var(--accent-subtle);"><i style="position: absolute; left: -10px; top: 8px; bottom: 8px; width: 2px; border-radius: 0 2px 2px 0; background: var(--accent);"></i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg></span>
+              <span style="width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"></path></svg></span>
+              <span style="width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></span>
+              <span style="width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path></svg></span>
+              <span style="width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></span>
+            </div>
+
+            <div style="flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font: 600 16px/22px var(--font-sans);">Revenue overview</span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);"><span class="pl-live"></span>live</span>
+                <span class="pl-seg" aria-hidden="true" style="margin-left: auto;"><span class="pl-seg__btn" style="display: inline-flex; align-items: center;">7D</span><span class="pl-seg__btn" style="display: inline-flex; align-items: center; color: var(--text); background: var(--surface-overlay); box-shadow: 0 0 0 1px var(--border);">30D</span><span class="pl-seg__btn" style="display: inline-flex; align-items: center;">90D</span></span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                <div class="pl-card pl-stat" style="padding: 12px; gap: 4px;"><span class="pl-stat__label">Revenue</span><span style="display: flex; align-items: baseline; gap: 8px;"><span class="pl-stat__value pl-num" style="font-size: 22px; line-height: 28px;">$48,210</span><span class="pl-delta pl-delta--up">↑ 12.4%</span></span><svg class="pl-spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true" style="height: 26px;"><path vector-effect="non-scaling-stroke" d="M0,24 L10,22 L20,25 L30,20 L40,21 L50,16 L60,18 L70,13 L80,14 L90,9 L100,6"></path></svg></div>
+                <div class="pl-card pl-stat" style="padding: 12px; gap: 4px;"><span class="pl-stat__label">Orders</span><span style="display: flex; align-items: baseline; gap: 8px;"><span class="pl-stat__value pl-num" style="font-size: 22px; line-height: 28px;">1,284</span><span class="pl-delta pl-delta--up">↑ 8.1%</span></span><svg class="pl-spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true" style="height: 26px;"><path vector-effect="non-scaling-stroke" d="M0,20 L10,22 L20,18 L30,19 L40,15 L50,17 L60,14 L70,15 L80,11 L90,12 L100,9"></path></svg></div>
+                <div class="pl-card pl-stat" style="padding: 12px; gap: 4px;"><span class="pl-stat__label">Visitors</span><span style="display: flex; align-items: baseline; gap: 8px;"><span class="pl-stat__value pl-num" style="font-size: 22px; line-height: 28px;">21.4k</span><span class="pl-delta pl-delta--down">↓ 3.2%</span></span><svg class="pl-spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true" style="height: 26px;"><path vector-effect="non-scaling-stroke" d="M0,12 L10,10 L20,14 L30,11 L40,13 L50,12 L60,16 L70,14 L80,18 L90,24 L100,19"></path></svg></div>
+                <div class="pl-card pl-stat" style="padding: 12px; gap: 4px;"><span class="pl-stat__label">Conversion</span><span style="display: flex; align-items: baseline; gap: 8px;"><span class="pl-stat__value pl-num" style="font-size: 22px; line-height: 28px;">6.0%</span><span class="pl-delta pl-delta--up">↑ 0.4 pt</span></span><svg class="pl-spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true" style="height: 26px;"><path vector-effect="non-scaling-stroke" d="M0,22 L10,21 L20,22 L30,19 L40,20 L50,18 L60,18 L70,16 L80,15 L90,15 L100,13"></path></svg></div>
+              </div>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <div class="pl-card pl-chart" style="flex: 3 1 380px; min-width: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-weight: 500;">Revenue by day</span><span class="pl-legend" style="font-size: 12px;"><span><i style="background: var(--chart-1);"></i>This month</span><span><i style="background: repeating-linear-gradient(90deg, var(--chart-2) 0 4px, transparent 4px 7px);"></i>Last month</span></span></div>
+                  <svg viewBox="0 0 800 200" preserveAspectRatio="none" style="width: 100%; height: 170px;" role="img" aria-label="Example chart: revenue by day rising over 30 days, compared with the previous 30 days.">
+                    <g class="grid"><line x1="0" x2="800" y1="50" y2="50" vector-effect="non-scaling-stroke"></line><line x1="0" x2="800" y1="100" y2="100" vector-effect="non-scaling-stroke"></line><line x1="0" x2="800" y1="150" y2="150" vector-effect="non-scaling-stroke"></line></g>
+                    <path class="area" d="M0,200 L0,77.5 L55.2,79.5 L110.3,104.6 L165.5,80.1 L220.7,62.1 L275.9,76.5 L331,89.5 L386.2,63.4 L441.4,63 L496.6,78.7 L551.7,63.4 L606.9,51.5 L662.1,63.9 L717.2,69.1 L772.4,49.1 L800,35.5 L800,200 Z"></path>
+                    <path class="s2" vector-effect="non-scaling-stroke" d="M0,90 L55.2,92.4 L110.3,107.1 L165.5,87.2 L220.7,74 L275.9,103.5 L331,103.8 L386.2,77.2 L441.4,89.5 L496.6,100.2 L551.7,87.2 L606.9,72 L662.1,93.2 L717.2,88.4 L772.4,69.1 L800,68.5"></path>
+                    <path class="s1" vector-effect="non-scaling-stroke" d="M0,77.5 L55.2,79.5 L110.3,104.6 L165.5,80.1 L220.7,62.1 L275.9,76.5 L331,89.5 L386.2,63.4 L441.4,63 L496.6,78.7 L551.7,63.4 L606.9,51.5 L662.1,63.9 L717.2,69.1 L772.4,49.1 L800,35.5"></path>
+                  </svg>
+                </div>
+                <div class="pl-card" style="flex: 2 1 260px; min-width: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-weight: 500;">Goals this month</span>
+                  <div style="display: flex; justify-content: space-around; gap: 8px; flex-wrap: wrap;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative;">
+                      <svg width="120" height="72" viewBox="0 0 120 72" role="img" aria-label="Revenue goal: 78% of $62,000 reached."><path d="M10,64 A50,50 0 0 1 110,64" fill="none" style="stroke: var(--surface-raised)" stroke-width="10" stroke-linecap="round"></path><path d="M10,64 A50,50 0 0 1 110,64" fill="none" style="stroke: var(--chart-1)" stroke-width="10" stroke-linecap="round" stroke-dasharray="122.5 157.1"></path></svg>
+                      <span class="pl-num" style="position: absolute; top: 34px; left: 0; right: 0; text-align: center; font: 600 20px/24px var(--font-sans);">78%</span>
+                      <span style="font-size: 12px; color: var(--text-muted);">of $62k revenue</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative;">
+                      <svg width="120" height="72" viewBox="0 0 120 72" role="img" aria-label="Refund rate: 1.6%, limit 2%."><path d="M10,64 A50,50 0 0 1 110,64" fill="none" style="stroke: var(--surface-raised)" stroke-width="10" stroke-linecap="round"></path><path d="M10,64 A50,50 0 0 1 110,64" fill="none" style="stroke: var(--warning)" stroke-width="10" stroke-linecap="round" stroke-dasharray="125.7 157.1"></path></svg>
+                      <span class="pl-num" style="position: absolute; top: 34px; left: 0; right: 0; text-align: center; font: 600 20px/24px var(--font-sans);">1.6%</span>
+                      <span style="font-size: 12px; color: var(--text-muted);">refunds · limit 2%</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+                    <div class="pl-meter"><div class="pl-meter__top" style="font-size: 12px;"><span>Database storage</span><b>8.6 / 10 GB</b></div><div class="pl-meter__track" style="height: 6px;"><div class="pl-meter__fill" style="width: 86%; background: var(--warning);"></div></div></div>
+                    <div class="pl-meter"><div class="pl-meter__top" style="font-size: 12px;"><span>Tracked events</span><b>412k / 1M</b></div><div class="pl-meter__track" style="height: 6px;"><div class="pl-meter__fill" style="width: 41%;"></div></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <div class="pl-card" style="flex: 1 1 240px; min-width: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+                  <span style="font-weight: 500;">Visit to order</span>
+                  <div style="display: grid; grid-template-columns: 70px 1fr 48px; gap: 6px 8px; align-items: center; font-size: 12px;">
+                    <span style="color: var(--text-secondary);">Visited</span><span style="height: 16px; border-radius: 3px; background: var(--seq-3);"></span><span class="pl-num" style="text-align: right;">21.4k</span>
+                    <span style="color: var(--text-secondary);">Pricing</span><span style="height: 16px; border-radius: 3px; background: var(--seq-4); width: 38%;"></span><span class="pl-num" style="text-align: right;">8.1k</span>
+                    <span style="color: var(--text-secondary);">Trial</span><span style="height: 16px; border-radius: 3px; background: var(--seq-5); width: 12%;"></span><span class="pl-num" style="text-align: right;">2.6k</span>
+                    <span style="color: var(--text-secondary);">Ordered</span><span style="height: 16px; border-radius: 3px; background: var(--seq-6); width: 6%;"></span><span class="pl-num" style="text-align: right;">1.3k</span>
+                  </div>
+                </div>
+                <div class="pl-card" style="flex: 1 1 240px; min-width: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+                  <span style="font-weight: 500;">Customers still buying</span>
+                  <div role="img" aria-label="Retention by monthly cohort: about 40% still buying after one month, about 22% after four." style="display: grid; grid-template-columns: 34px repeat(5, minmax(0, 1fr)); gap: 3px; font-size: 11px; text-align: center;">
+                    <span style="color: var(--text-muted); text-align: left;">Jul</span><span style="background: var(--seq-6); color: var(--on-seq-6); border-radius: 2px; line-height: 20px;">100</span><span style="background: var(--seq-4); color: var(--on-seq-4); border-radius: 2px; line-height: 20px;">42</span><span style="background: var(--seq-3); color: var(--on-seq-3); border-radius: 2px; line-height: 20px;">31</span><span style="background: var(--seq-2); color: var(--on-seq-2); border-radius: 2px; line-height: 20px;">26</span><span style="background: var(--seq-2); color: var(--on-seq-2); border-radius: 2px; line-height: 20px;">22</span>
+                    <span style="color: var(--text-muted); text-align: left;">Aug</span><span style="background: var(--seq-6); color: var(--on-seq-6); border-radius: 2px; line-height: 20px;">100</span><span style="background: var(--seq-4); color: var(--on-seq-4); border-radius: 2px; line-height: 20px;">39</span><span style="background: var(--seq-3); color: var(--on-seq-3); border-radius: 2px; line-height: 20px;">30</span><span style="background: var(--seq-2); color: var(--on-seq-2); border-radius: 2px; line-height: 20px;">24</span><span></span>
+                    <span style="color: var(--text-muted); text-align: left;">Sep</span><span style="background: var(--seq-6); color: var(--on-seq-6); border-radius: 2px; line-height: 20px;">100</span><span style="background: var(--seq-4); color: var(--on-seq-4); border-radius: 2px; line-height: 20px;">44</span><span style="background: var(--seq-3); color: var(--on-seq-3); border-radius: 2px; line-height: 20px;">33</span><span></span><span></span>
+                    <span style="color: var(--text-muted); text-align: left;">Oct</span><span style="background: var(--seq-6); color: var(--on-seq-6); border-radius: 2px; line-height: 20px;">100</span><span style="background: var(--seq-4); color: var(--on-seq-4); border-radius: 2px; line-height: 20px;">41</span><span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="pl-card" style="flex: 1 1 240px; min-width: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+                  <span style="font-weight: 500; display: flex; align-items: center; gap: 8px;">Happening now<span class="pl-badge pl-badge--success" style="height: 18px; font-size: 11px; margin-left: auto;">23 on site</span></span>
+                  <div style="display: flex; flex-direction: column; gap: 6px; font: 400 12px/16px var(--font-mono); color: var(--text-muted);">
+                    <span><span style="color: var(--accent);">order</span> $64.00 · Pro · now</span>
+                    <span><span style="color: var(--warning);">click</span> start_trial · /pricing · 4 s</span>
+                    <span><span style="color: var(--accent);">view</span> /products/cold-brew-kit · 9 s</span>
+                    <span><span style="color: var(--warning);">click</span> add_to_cart · 12 s</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption style="margin-top: 12px; font-size: 13px; color: var(--text-muted);">A Pulse dashboard joining a shop’s PostgreSQL orders, Stripe subscriptions and website visits.</figcaption>
+      </figure>
+    </section>
+
+    <section id="product" aria-labelledby="what-title" style="border-top: 1px solid var(--border);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 36px;">
+        <div style="max-width: 720px; display: flex; flex-direction: column; gap: 12px;">
+          <span class="pl-stat__label">What Pulse does</span>
+          <h2 id="what-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">Everything between your data and a decision</h2>
+          <p style="margin: 0; color: var(--text-secondary);">Most small teams stitch together a BI tool, a database host and a web analytics script. Pulse is all three, and they already know about each other.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+          <article class="pl-card" style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-subtle); color: var(--accent);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg></span>
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Dashboards without a data team</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Pick a table and a measure, write SQL, or describe the chart in plain words. Pulse suggests a first dashboard from your tables.</p>
+          </article>
+          <article id="databases" class="pl-card" style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-subtle); color: var(--accent);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path></svg></span>
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Managed databases</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">PostgreSQL, ClickHouse, Cassandra and MongoDB. Small instances are ready in seconds; dedicated ones get reserved CPU and memory. Backed up daily.</p>
+          </article>
+          <article id="tracking" class="pl-card" style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-subtle); color: var(--accent);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></span>
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Website and button tracking</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">One small script records visits, page views and clicks on any button you tag. Events land in a table you can join with orders.</p>
+          </article>
+          <article class="pl-card" style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-subtle); color: var(--accent);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg></span>
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Ask from ChatGPT or Claude</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Turn on the built-in MCP server and AI assistants can read your dashboards and run read-only queries, with each person’s own permissions.</p>
+          </article>
+          <article class="pl-card" style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-subtle); color: var(--accent);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></span>
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Alerts that explain themselves</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Get a Slack message or email when a number crosses a line, with what changed and why, not just a red dot.</p>
+          </article>
+          <article class="pl-card" style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-subtle); color: var(--accent);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"></path></svg></span>
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Open to extend</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Public API, custom widgets and your own query engines when you outgrow the defaults.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="how-title" style="border-top: 1px solid var(--border); background: var(--surface);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 32px;">
+        <h2 id="how-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">How do I get from raw data to a dashboard?</h2>
+        <ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <li style="display: flex; flex-direction: column; gap: 8px;"><span class="pl-mono" style="color: var(--accent); font-size: 13px;">01</span><h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Connect or create your data</h3><p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Add a database with a read-only user, create a Pulse database, or paste the tracking script. About two minutes.</p></li>
+          <li style="display: flex; flex-direction: column; gap: 8px;"><span class="pl-mono" style="color: var(--accent); font-size: 13px;">02</span><h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Pick a suggested dashboard</h3><p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Pulse reads your table names and proposes a starting point, such as revenue, customers or website traffic.</p></li>
+          <li style="display: flex; flex-direction: column; gap: 8px;"><span class="pl-mono" style="color: var(--accent); font-size: 13px;">03</span><h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Share it and set alerts</h3><p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text-secondary);">Invite your team, send a weekly email report, and get told when something moves.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section aria-labelledby="cmp-title" style="border-top: 1px solid var(--border);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 28px;">
+        <div style="max-width: 720px; display: flex; flex-direction: column; gap: 12px;">
+          <h2 id="cmp-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">Pulse or three separate tools?</h2>
+          <p style="margin: 0; color: var(--text-secondary);">What changes when your dashboards, databases and website analytics come from one place.</p>
+        </div>
+        <div class="pl-table-wrap">
+          <table class="pl-table" style="font-size: 15px;">
+            <thead><tr><th style="width: 30%;"></th><th style="color: var(--accent);">Pulse</th><th>BI tool + database host + analytics script</th></tr></thead>
+            <tbody>
+              <tr><td class="pl-strong">Join website visits with orders</td><td style="color: var(--text);">One SQL query, out of the box</td><td>Export, import, or a data pipeline</td></tr>
+              <tr><td class="pl-strong">Bills and logins</td><td style="color: var(--text);">One</td><td>Three</td></tr>
+              <tr><td class="pl-strong">First dashboard</td><td style="color: var(--text);">Suggested from your tables</td><td>Built by hand</td></tr>
+              <tr><td class="pl-strong">AI assistants</td><td style="color: var(--text);">Built-in MCP server</td><td>Depends on each tool</td></tr>
+              <tr><td class="pl-strong">Keep data on your servers</td><td style="color: var(--text);">Self-host the whole tool</td><td>Depends on each tool</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="src-title" style="border-top: 1px solid var(--border); background: var(--surface);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 20px;">
+        <h2 id="src-title" style="margin: 0; font: 600 28px/34px var(--font-sans); letter-spacing: -0.02em;">What can Pulse connect to?</h2>
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap;">
+          <li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">PostgreSQL</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">MySQL</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">ClickHouse</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">MongoDB</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Cassandra</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">BigQuery</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Snowflake</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">SQL Server</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Stripe</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Shopify</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">HubSpot</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Google Sheets</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">CSV files</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Any REST API</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">Websites (tracking script)</li><li class="pl-badge" style="height: 30px; font-size: 14px; padding: 0 12px; color: var(--text);">iOS and Android apps</li>
+        </ul>
+        <p style="margin: 0; font-size: 14px; color: var(--text-muted);">Pulse queries each source where it lives, with a read-only user. <a href="/integrations">All integrations</a></p>
+      </div>
+    </section>
+
+    <section id="pricing" aria-labelledby="price-title" style="border-top: 1px solid var(--border);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 32px;">
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 720px;">
+          <h2 id="price-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">How much does Pulse cost?</h2>
+          <p style="margin: 0; color: var(--text-secondary);">Free for small teams. Paid plans are per workspace, not per viewer, so the whole company can look at dashboards.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+          <article class="pl-card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Free</h3>
+            <p style="margin: 0;"><span style="font: 600 36px/40px var(--font-sans); letter-spacing: -0.02em;">$0</span></p>
+            <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--text-secondary);"><li>3 editors, unlimited viewers</li><li>[YOUR LIMIT] tracked events a month</li><li>1 small Pulse database</li></ul>
+            <a class="pl-btn pl-btn--secondary" href="/signup" style="text-decoration: none; margin-top: auto;">Start free</a>
+          </article>
+          <article class="pl-card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px; border-color: var(--accent);">
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans); display: flex; align-items: center; gap: 8px;">Team<span class="pl-badge" style="color: var(--accent); background: var(--accent-subtle); border-color: transparent;">Most teams</span></h3>
+            <p style="margin: 0;"><span style="font: 600 36px/40px var(--font-sans); letter-spacing: -0.02em;">[YOUR PRICE]</span><span style="color: var(--text-muted);"> / month</span></p>
+            <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--text-secondary);"><li>Unlimited editors and dashboards</li><li>Alerts in Slack and email</li><li>MCP server and API</li><li>Dedicated databases available</li></ul>
+            <a class="pl-btn pl-btn--primary" href="/signup?plan=team" style="text-decoration: none; margin-top: auto;">Start a 14-day trial</a>
+          </article>
+          <article class="pl-card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+            <h3 style="margin: 0; font: 600 18px/26px var(--font-sans);">Self-hosted</h3>
+            <p style="margin: 0;"><span style="font: 600 36px/40px var(--font-sans); letter-spacing: -0.02em;">[YOUR PRICE]</span></p>
+            <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--text-secondary);"><li>The whole tool on your servers</li><li>Your own SSO</li><li>Offline install bundle</li></ul>
+            <a class="pl-btn pl-btn--secondary" href="#self-host" style="text-decoration: none; margin-top: auto;">See how it works</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="self-host" aria-labelledby="sh-title" style="border-top: 1px solid var(--border); background: var(--surface);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; gap: 40px; flex-wrap: wrap; align-items: center;">
+        <div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 14px;">
+          <h2 id="sh-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">Can I run Pulse on my own servers?</h2>
+          <p style="margin: 0; color: var(--text-secondary);">Yes. Self-hosted Pulse is the whole analytics tool: dashboards, query engine, tracking, alerts and the MCP server. It runs with Docker or Kubernetes, and nothing is sent back to us. Use Pulse databases alongside it, or only your own.</p>
+          <p style="margin: 0; font-size: 14px; color: var(--text-muted);">Needs 2 vCPU and 4 GB of memory to start.</p>
+        </div>
+        <div style="flex: 1 1 420px; min-width: 0;">
+          <pre class="pl-code" style="margin: 0; font-size: 14px; line-height: 24px; white-space: pre-wrap; overflow-wrap: anywhere; overflow: visible;"><span style="color: var(--text-muted);"># get the compose file and start Pulse</span>
+<span class="k">curl</span> -fsSL https://get.pulse.app/compose.yml -o compose.yml
+<span class="k">docker</span> compose up -d</pre>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-title" style="border-top: 1px solid var(--border);">
+      <div style="max-width: 860px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 24px;">
+        <h2 id="faq-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">Questions people ask</h2>
+        <div style="display: flex; flex-direction: column; border-top: 1px solid var(--border);">
+          <details open style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">What is Pulse?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">Pulse is an analytics platform for small and medium businesses. It combines a dashboard builder and SQL query engine, managed databases, and website tracking, so a team can go from raw data to a live dashboard without a data team or several vendors.</p></details>
+          <details style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">Do I need to know SQL to use Pulse?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">No. You can build charts by picking a table, a measure and a grouping, or describe what you want and Pulse writes the SQL. People who know SQL can write it directly.</p></details>
+          <details style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">Does Pulse copy my data?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">No. Pulse queries connected databases where they are, with a read-only user, and keeps results for a few minutes to make dashboards fast. Data is only stored by Pulse if you use a Pulse database or website tracking.</p></details>
+          <details style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">Can I self-host Pulse?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">Yes. The full analytics tool runs on your own servers with Docker or Kubernetes, including dashboards, the query engine, tracking, alerts and the MCP server. Nothing is sent back to Pulse.</p></details>
+          <details style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">Which databases can Pulse host?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">PostgreSQL, ClickHouse, Cassandra and MongoDB, as a small shared instance that is ready in seconds or a dedicated instance with reserved resources.</p></details>
+          <details style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">Can ChatGPT or Claude read my Pulse data?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">Yes, if you turn on the Pulse MCP server. Each person signs in with their own Pulse account, sees only what they can see in Pulse, and assistants run read-only queries by default.</p></details>
+          <details style="border-bottom: 1px solid var(--border); padding: 18px 0;"><summary style="cursor: pointer; font: 500 17px/26px var(--font-sans);">Where is my data stored?</summary><p style="margin: 10px 0 0; color: var(--text-secondary);">Pulse Cloud runs in Frankfurt (EU) or Virginia (US); you choose when you create a workspace. Self-hosted Pulse keeps everything on your servers.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="cta-title" style="border-top: 1px solid var(--border); background: var(--surface);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;">
+        <h2 id="cta-title" style="margin: 0; font: 600 36px/42px var(--font-sans); letter-spacing: -0.025em;">See your own numbers in ten minutes</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"><a class="pl-btn pl-btn--primary pl-btn--lg" href="/signup" style="text-decoration: none;">Start free</a><a class="pl-btn pl-btn--ghost pl-btn--lg" href="/demo" style="text-decoration: none;">Try the demo workspace</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; font-size: 14px;">
+      <div style="display: flex; flex-direction: column; gap: 10px;"><span style="display: flex; align-items: center; gap: 8px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" style="fill: var(--accent)"></rect><path d="M4 11h3l2-5 2 8 2-3h3" fill="none" style="stroke: var(--on-accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Pulse</span><span style="color: var(--text-muted); font-size: 13px;">Analytics, dashboards and databases for small and medium businesses.</span></div>
+      <nav aria-label="Product" style="display: flex; flex-direction: column; gap: 8px;"><span class="pl-stat__label">Product</span><a href="#product" style="color: var(--text-secondary); text-decoration: none;">Dashboards</a><a href="#databases" style="color: var(--text-secondary); text-decoration: none;">Databases</a><a href="#tracking" style="color: var(--text-secondary); text-decoration: none;">Tracking</a><a href="#pricing" style="color: var(--text-secondary); text-decoration: none;">Pricing</a></nav>
+      <nav aria-label="Developers" style="display: flex; flex-direction: column; gap: 8px;"><span class="pl-stat__label">Developers</span><a href="/docs" style="color: var(--text-secondary); text-decoration: none;">Docs</a><a href="/docs/api" style="color: var(--text-secondary); text-decoration: none;">API</a><a href="/docs/mcp" style="color: var(--text-secondary); text-decoration: none;">MCP server</a><a href="/llms.txt" style="color: var(--text-secondary); text-decoration: none;">llms.txt</a></nav>
+      <nav aria-label="Company" style="display: flex; flex-direction: column; gap: 8px;"><span class="pl-stat__label">Company</span><a href="/privacy" style="color: var(--text-secondary); text-decoration: none;">Privacy</a><a href="/security" style="color: var(--text-secondary); text-decoration: none;">Security</a><a href="/status" style="color: var(--text-secondary); text-decoration: none;">Status</a></nav>
+    </div>
+    <p style="max-width: 1200px; margin: 0 auto; padding: 0 24px 32px; font-size: 12px; color: var(--text-muted);">Updated <time datetime="2026-11-08">November 8, 2026</time></p>
+  </footer>
+</div>
+</body>
+</html>
